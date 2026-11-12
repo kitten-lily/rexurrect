@@ -31,7 +31,7 @@ tap = "cemcatik/homebrew-tap"
 publish-jobs = ["homebrew"]
 # In every archive. The formula installs it in share/rexurrect, where
 # `rexurrect setup` finds it.
-include = ["rexurrect.plugin.zsh"]
+include = ["rexurrect.plugin.zsh", "rexurrect.fish"]
 # So users can check a binary with `gh attestation verify`.
 github-attestations = true
 

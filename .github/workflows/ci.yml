@@ -123,6 +123,8 @@ jobs:
         with:
           persist-credentials: false
       - run: zsh -n rexurrect.plugin.zsh
+      - run: brew install fish
+      - run: fish --no-execute rexurrect.fish
 
   deny:
     name: Dependency policy

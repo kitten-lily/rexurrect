@@ -163,6 +163,34 @@ So adding to the list only works after loading the recorder; with oh-my-zsh, tha
 `source $ZSH/oh-my-zsh.sh`. The list is read at every command, so a change applies straight
 away.
 
+### The fish recorder
+
+[`rexurrect.fish`](rexurrect.fish) is the zsh recorder ported to fish (3.0 or later). It
+writes the same recorder files and follows the same rules: it does nothing outside Rex,
+records only in a block's outermost shell (a fish nested in zsh, or zsh nested in fish, stays
+silent), records a command as it starts, and ignores multi-line commands and the commands on
+the ignore list. Install it as a `conf.d` snippet:
+
+```sh
+mkdir -p ~/.config/fish/conf.d
+curl -fsSL -o ~/.config/fish/conf.d/rexurrect.fish \
+  https://raw.githubusercontent.com/cemcatik/rexurrect/main/rexurrect.fish
+```
+
+The ignore list is the fish list `REXURRECT_IGNORE`, with the same defaults. `conf.d` snippets
+load before `config.fish`, so change it there:
+
+```fish
+set -a REXURRECT_IGNORE htop tig   # add to the defaults
+set -g REXURRECT_IGNORE ls cd      # replace them
+set -g REXURRECT_IGNORE            # ignore nothing but multi-line commands
+```
+
+Two differences from zsh: fish can't split a command line the way it parses it, so any line
+holding `;`, `&` or `|` counts as several commands and is recorded, even when that character
+is quoted; and fish expands abbreviations before running a command, so the expanded command is
+recorded.
+
 ## Usage
 
 ```sh
@@ -280,7 +308,7 @@ save to find a block's scrollback too large adds a line to `rexurrect.log` namin
 and block; later saves don't repeat it while it stays too large. Clearing the block's scrollback
 (Cmd-K) lets the next save keep it again.
 
-Without the recorder (you don't use zsh, or skipped that step), or in a block whose shell
+Without a recorder (you use neither zsh nor fish, or skipped that step), or in a block whose shell
 started before you loaded it, rexurrect falls back to the program running in the block at save
 time: `nvim`, a dev server or a nested shell comes back with its full command line typed at the
 prompt. Each argument is quoted where zsh needs it (`vim 'my file.txt'`), so the typed command
